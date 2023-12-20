@@ -125,19 +125,19 @@ public class HEventLogConstruction {
 					//path2 Python
 					String path2 = "E:\\wyFile\\sub_case_iden2.py";
 //					String path2 = "E:\\wyFile\\sub_case_iden3.py";
-					System.out.println("test µ÷ÓÃ.pyÎÄ¼ş.......");
+					System.out.println("test .......");
 					
 					//path3 
 					String path3 = path + name + "1.csv";
 					addPython(path2,path1,path3);
 					
 					//sub_case_id
-					System.out.println("½øĞĞ×ÓÈÕÖ¾¸üĞÂ.......");
+					System.out.println(".......");
 					restructure re= new restructure();
 					
 					XLog xLog = re.addSubCid(factory, sublog, path3);
 					
-					System.out.println("¸üĞÂÍê³É....");
+					System.out.println("¸....");
 					
 					value.setMainLog(xLog);
 					String name1 = key.toString()+ "_2";

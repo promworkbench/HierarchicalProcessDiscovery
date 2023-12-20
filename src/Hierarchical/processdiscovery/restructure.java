@@ -16,12 +16,12 @@ import org.deckfour.xes.model.impl.XLogImpl;
 import org.processmining.plugins.simplelogoperations.XLogFunctions;
 
 public class restructure {
-	public XLog addSubCid(XFactory factory, XLog sublog, String path) throws IOException {//sublog是需要更新的日志
+	public XLog addSubCid(XFactory factory, XLog sublog, String path) throws IOException {//sublog
 		
 		
 		XAttributeMap logattlist = XLogFunctions.copyAttMap(sublog.getAttributes());
-		XLog newLog = new XLogImpl(logattlist);   //newLog是更新后的日志
-		XLog newsublog = new XLogImpl(logattlist);   //newLog是更新后的日志
+		XLog newLog = new XLogImpl(logattlist);   //newLog
+		XLog newsublog = new XLogImpl(logattlist);   //newLog
 		//读取信息
 		FileReader file = new FileReader(path);
 		BufferedReader read =new BufferedReader(file); 
@@ -34,14 +34,14 @@ public class restructure {
 		
 		XTrace newTrace = factory.createTrace();
 		
-		//.csv文件的格式：case id、trace
+		//.csvcase idrace
 		String caseid =line1[0];
 		
 		while(read.lines() != null) {
 			
 			if(!caseid.equals(line1[0])) {
 				
-				XConceptExtension.instance().assignName(newTrace, caseid); //先把上一条轨迹添加到newLog里
+				XConceptExtension.instance().assignName(newTrace, caseid); //
 				caseid =line1[0];		
 				newLog.add(newTrace);
 				newTrace = factory.createTrace();

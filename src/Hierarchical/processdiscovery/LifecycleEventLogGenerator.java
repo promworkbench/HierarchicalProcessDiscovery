@@ -72,7 +72,7 @@ public class LifecycleEventLogGenerator {
 				}
 //				
 //				
-				//时间格式转换
+				//
 				String text =XLogFunctions.getTime(event).toString();
 				DateFormat formate1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				DateFormat formate2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",Locale.ENGLISH);

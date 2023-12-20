@@ -50,7 +50,7 @@ public class noLifecycleLog {
 		XLog Log = (XLog)originalLog.clone();
 		XAttributeMap logattlist = XLogFunctions.copyAttMap(originalLog.getAttributes());
 		
-		XLog newLog = new XLogImpl(logattlist);   //newLog是更新后的日志
+		XLog newLog = new XLogImpl(logattlist);   //newLog
 		for(XTrace trace: Log)
 		{
 			XTrace newTrace = new XTraceImpl(XLogFunctions.copyAttMap(trace.getAttributes()));
