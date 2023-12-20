@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-    <info organisation="prom" module="SoftwareProcessMining" revision="latest">
+    <info organisation="prom" module="HierarchicalProcessDiscovery" revision="latest">
     	<description>
     		Version VERSION
     	</description>
@@ -25,6 +25,7 @@
    	 <dependency org="prom" name="PNAnalysis" rev="latest" changing="true" transitive="true" />
    	  <dependency org="prom" name="PNetAlignmentAnalysis" rev="latest" changing="true" transitive="true" />
     	  <dependency org="prom" name="SimpleLogOperations" rev="latest" changing="true" transitive="true" />
+    	  <dependency org="prom" name="SoftwareProcessMining" rev="latest" changing="true" transitive="true" />
     	<!-- Third party libraries. These may span multiple lines. -->
     	<!-- Please uncomment the second line in the resolve target in your build.xml file
     	     if you have any third party libraries. -->
