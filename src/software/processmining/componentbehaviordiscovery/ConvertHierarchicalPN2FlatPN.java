@@ -66,7 +66,7 @@ public class ConvertHierarchicalPN2FlatPN {
 		}
 		
 		//get all transition that are not invisible. 
-		//获得所有的可见变迁     invisible:不可见
+		//invisible:
 		HashSet<Transition> transitionSet = new HashSet<>();
 		for(Transition t :pn.getTransitions())
 		{
@@ -105,7 +105,7 @@ public class ConvertHierarchicalPN2FlatPN {
 	 * !!!Requirement: all sub-pn in hpn are with sink and source places. 
 	 */
 	
-	//递归的转化为Flat Petri net 
+	//Flat Petri net 
 	public static void convertHPNtoPNRecursively(final Petrinet pn, Transition nestedTransition,HashSet<String> nestedTransitionLabels,HashMap<String, XEventClass> eventClassName2EventClass,  HierarchicalMultiinstancePetriNet hpn,String nestFlag)
 	{
 		
@@ -176,7 +176,7 @@ public class ConvertHierarchicalPN2FlatPN {
 		
 				
 		//create start and end nested transition
-		//创建开始和结束嵌套变迁
+		//
 		Transition startNestedTransition = pn.addTransition(nestedName+"+Start");
 		Transition endNestedTransition= pn.addTransition(nestedName+"+Complete");
 		
@@ -242,15 +242,15 @@ public class ConvertHierarchicalPN2FlatPN {
 		pn.addArc((Place) mapping.get(getSinkPlace(toplevel_pn)), endNestedTransition);
 		
 		if(nestFlag.equals("2")) {
-			//创建不可见变迁
+			//
 			Transition invision1 = pn.addTransition("T1");
 			Transition invision2= pn.addTransition("T2");
 			invision1.setInvisible(true);
 			invision2.setInvisible(true);
 			
-			//创建两个库所 Pe和Px
+			//
 			//T1->Px   Px->T2
-			//创建一个库所Pe和Px
+			//
 			Place Px = pn.addPlace("Px");
 
 			Place Pe = pn.addPlace("Pe");
@@ -275,7 +275,7 @@ public class ConvertHierarchicalPN2FlatPN {
 
 	}
 	
-	//转化为普通变迁
+	//
 	public static void convertNormalTransition(final Petrinet pn, Transition t,HashSet<String> nestedTransitionLabels)
 	{
 		//get the pre place set of t
@@ -324,7 +324,7 @@ public class ConvertHierarchicalPN2FlatPN {
 		
 	}
 	
-	//获得SourcePlace
+	//SourcePlace
 	public static Place getSourcePlace(Petrinet pn)
 	{
 		for (final Place p : pn.getPlaces()) 
@@ -346,7 +346,7 @@ public class ConvertHierarchicalPN2FlatPN {
 		return null;
 	}
 	
-	//获得SinkPlace
+	//SinkPlace
 	public static Place getSinkPlace(Petrinet pn)
 	{
 		for (final Place p : pn.getPlaces()) 
