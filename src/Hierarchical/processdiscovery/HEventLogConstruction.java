@@ -33,7 +33,7 @@ public class HEventLogConstruction {
 	 */
 	public static HEventLog constructHierarchicalLog(ActivityNestingGraph ang, HashSet<String> activitySet , XLog lifecycleLog, XFactory factory, XLogInfo Xloginfo) throws IOException
 	{
-		//get all nested activities  被嵌套
+		//get all nested activities
 		HashSet<String> allNestedActivities = new HashSet<>();
 		for(String n: TransitiveNestingRelationReduction.getAllNestedActivities(ang))
 		{
@@ -41,7 +41,7 @@ public class HEventLogConstruction {
 		}
 		System.out.println("All Nested Activities: "+allNestedActivities); 
 
-		//get all root nesting activities 嵌套
+		//get all root nesting activities
 		HashSet<String> rootActivities  =TransitiveNestingRelationReduction.getAllRootActivities(ang);
 		System.out.println("Root Activities: "+rootActivities); 
 		
@@ -63,7 +63,6 @@ public class HEventLogConstruction {
 				
 		hEventLog.setMainLog(mainLog);
 		//the mapping from nested eventclass (activities) to its corresponding sub-log. 
-		//活动对应的子日志
 		HashMap<XEventClass, HEventLog> subLogMapping =new HashMap<XEventClass,HEventLog>();
 		HashMap<XEventClass, HEventLog> newsubLogMapping =new HashMap<XEventClass, HEventLog>();
 
@@ -74,7 +73,6 @@ public class HEventLogConstruction {
 			subLogMapping.put(eventClassActivity,
 					ConstructHierarchicalEventLogRecusively(factory, convertSet2Hashset(TransitiveNestingRelationReduction.getNestedActivitiesOfAnActivity(ang, rootNestedActivity)), lifecycleLog, Xloginfo, ang));
 		}
-		//重构
 		newsubLogMapping = getsubsequenceRecusively(factory, subLogMapping);
 		
 		hEventLog.setSubLogMapping(newsubLogMapping);
@@ -92,16 +90,14 @@ public class HEventLogConstruction {
 		    	XEventClass key = next1.getKey();
 		    	HEventLog value = next1.getValue();
 		    	XEventClass class1;
-		    	//事件key对应的sublog
+		    	//sublog
 		    	XLog sublog = value.getMainLog();
-		    	//多实例：
 		    	if(boolMultiInstance(sublog)==2) {
 		    		
 					String path = "E:\\wyFile\\";
 					String name = key.getId();
-					//path1 读取的子日志轨迹
+					//path1
 					String path1 = path + name+ ".csv";
-					//写入csv文件
 					FileWriter file1 = new FileWriter(path1);
 					BufferedWriter writer = new BufferedWriter(file1);
 					
@@ -113,7 +109,6 @@ public class HEventLogConstruction {
 						for (XEvent event:trace)
 						{
 							//String event_name = event.getClass().getName();
-							//提取事件名
 						    String eventName = XConceptExtension.instance().extractName(event);
 						    
 						    if(eventName!=null) {
@@ -127,41 +122,34 @@ public class HEventLogConstruction {
 						
 					}
 					writer.close();
-					//调用重构
-					//path2 Python文件路径
+					//path2 Python
 					String path2 = "E:\\wyFile\\sub_case_iden2.py";
 //					String path2 = "E:\\wyFile\\sub_case_iden3.py";
 					System.out.println("test 调用.py文件.......");
 					
-					//path3 重构后得到的文件
+					//path3 
 					String path3 = path + name + "1.csv";
 					addPython(path2,path1,path3);
 					
-					//将sub_case_id更新到HEventlog中
+					//sub_case_id
 					System.out.println("进行子日志更新.......");
 					restructure re= new restructure();
-					//读取重构的子日志轨迹
 					
 					XLog xLog = re.addSubCid(factory, sublog, path3);
 					
 					System.out.println("更新完成....");
-					//查看是否得到更新后的事件日志
-					
-					//更新到subLog中
 					
 					value.setMainLog(xLog);
 					String name1 = key.toString()+ "_2";
 					class1 = new XEventClass(name1, key.getIndex());
 					System.out.println("key label:" + key.getId()+ "index: "+key.getIndex());
 		    	}
-		    	else {  //一次单实例
+		    	else {  
 		    		value.setMainLog(sublog);
 		    		String name1 = key.toString();
 					 class1 = new XEventClass(name1, key.getIndex());
 		    	}
 		    	
-		    
-				//检查子子日志
 				HashMap<XEventClass, HEventLog> sub_sub= new HashMap<XEventClass, HEventLog>();
 		    	if(value.getSubLogMapping()!=null){
 		    		sub_sub = getsubsequenceRecusively(factory, value.getSubLogMapping());
@@ -173,7 +161,6 @@ public class HEventLogConstruction {
 		    return newsubLogMapping;
 	}
 	
-	//判断是单实例还是多实例, 加入了嵌套子流程的判断--------------------再
 	public static int boolMultiInstance(XLog sublog) {
 		
 		HashSet<String> activitySet =ActivityRelationDetection.getActivitySet(sublog);
@@ -201,7 +188,7 @@ public class HEventLogConstruction {
 				}
 			}// for
 			
-			if(frequence == eventInTraceNum) {   //说明是一次
+			if(frequence == eventInTraceNum) {  
 				dan++;
 			}
 			else if(frequence > eventInTraceNum) {
@@ -221,17 +208,14 @@ public class HEventLogConstruction {
 		
 	}
 	
-	//调用Python
+	//Python
 	public static void addPython(String path,String path1,String path2) {
 
         try {
-        	//传参
-        	String[] args1 = new String[] {"python", path,path1,path2};//
+       	String[] args1 = new String[] {"python", path,path1,path2};//
         	
-        	// 执行py文件
             Process proc = Runtime.getRuntime().exec(args1);
          
-            //用输入输出流来截取结果
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line;
             //System.out.println(in.readLine());
@@ -265,7 +249,6 @@ public class HEventLogConstruction {
 		hEventLog.setMainLog(mainLog);
 		
 		//the mapping from nested eventclass (activities) to its corresponding sub-log. 
-		//子日志映射
 		HashMap<XEventClass, HEventLog> subLogMapping =new HashMap<XEventClass, HEventLog>();
 		
 		for(String node: nestedActivitySet)
@@ -297,14 +280,12 @@ public class HEventLogConstruction {
 		return hashs;
 	}
 	//construct the main log, we only keep the complete event 
-	//构造顶层事件日志，并只包括 结束 状态
 	public static XLog getMainLog(XFactory factory, String logName, HashSet<XEventClass> XeventClassSetofTopLevelActivities, XLog lifecycleLog, XLogInfo Xloginfo)
 	{
 		XLog mainLog =initializeEventLog(factory, "Top-level");//set the log name
 		XAttributeMap attMap = new XAttributeMapImpl();
 		for(XTrace trace: lifecycleLog)
 		{
-			//创造一条轨迹
 			XTrace newTrace = factory.createTrace();
 			for(XEvent event: trace)
 			{
