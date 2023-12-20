@@ -33,7 +33,7 @@ public class HEventLogConstruction {
 	 */
 	public static HEventLog constructHierarchicalLog(ActivityNestingGraph ang, HashSet<String> activitySet , XLog lifecycleLog, XFactory factory, XLogInfo Xloginfo) throws IOException
 	{
-		//get all nested activities
+		//get all nested activities  ±»Ç¶Ì×
 		HashSet<String> allNestedActivities = new HashSet<>();
 		for(String n: TransitiveNestingRelationReduction.getAllNestedActivities(ang))
 		{
@@ -41,7 +41,7 @@ public class HEventLogConstruction {
 		}
 		System.out.println("All Nested Activities: "+allNestedActivities); 
 
-		//get all root nesting activities
+		//get all root nesting activities Ç¶Ì×
 		HashSet<String> rootActivities  =TransitiveNestingRelationReduction.getAllRootActivities(ang);
 		System.out.println("Root Activities: "+rootActivities); 
 		
@@ -63,6 +63,7 @@ public class HEventLogConstruction {
 				
 		hEventLog.setMainLog(mainLog);
 		//the mapping from nested eventclass (activities) to its corresponding sub-log. 
+		//»î¶¯¶ÔÓ¦µÄ×ÓÈÕÖ¾
 		HashMap<XEventClass, HEventLog> subLogMapping =new HashMap<XEventClass,HEventLog>();
 		HashMap<XEventClass, HEventLog> newsubLogMapping =new HashMap<XEventClass, HEventLog>();
 
@@ -73,6 +74,7 @@ public class HEventLogConstruction {
 			subLogMapping.put(eventClassActivity,
 					ConstructHierarchicalEventLogRecusively(factory, convertSet2Hashset(TransitiveNestingRelationReduction.getNestedActivitiesOfAnActivity(ang, rootNestedActivity)), lifecycleLog, Xloginfo, ang));
 		}
+		//ÖØ¹¹
 		newsubLogMapping = getsubsequenceRecusively(factory, subLogMapping);
 		
 		hEventLog.setSubLogMapping(newsubLogMapping);
@@ -90,14 +92,16 @@ public class HEventLogConstruction {
 		    	XEventClass key = next1.getKey();
 		    	HEventLog value = next1.getValue();
 		    	XEventClass class1;
-		    	//sublog
+		    	//ÊÂ¼şkey¶ÔÓ¦µÄsublog
 		    	XLog sublog = value.getMainLog();
+		    	//¶àÊµÀı£º
 		    	if(boolMultiInstance(sublog)==2) {
 		    		
 					String path = "E:\\wyFile\\";
 					String name = key.getId();
-					//path1
+					//path1 ¶ÁÈ¡µÄ×ÓÈÕÖ¾¹ì¼£
 					String path1 = path + name+ ".csv";
+					//Ğ´ÈëcsvÎÄ¼ş
 					FileWriter file1 = new FileWriter(path1);
 					BufferedWriter writer = new BufferedWriter(file1);
 					
@@ -109,6 +113,7 @@ public class HEventLogConstruction {
 						for (XEvent event:trace)
 						{
 							//String event_name = event.getClass().getName();
+							//ÌáÈ¡ÊÂ¼şÃû
 						    String eventName = XConceptExtension.instance().extractName(event);
 						    
 						    if(eventName!=null) {
@@ -122,34 +127,41 @@ public class HEventLogConstruction {
 						
 					}
 					writer.close();
-					//path2 Python
+					//µ÷ÓÃÖØ¹¹
+					//path2 PythonÎÄ¼şÂ·¾¶
 					String path2 = "E:\\wyFile\\sub_case_iden2.py";
 //					String path2 = "E:\\wyFile\\sub_case_iden3.py";
-					System.out.println("test .......");
+					System.out.println("test µ÷ÓÃ.pyÎÄ¼ş.......");
 					
-					//path3 
+					//path3 ÖØ¹¹ºóµÃµ½µÄÎÄ¼ş
 					String path3 = path + name + "1.csv";
 					addPython(path2,path1,path3);
 					
-					//sub_case_id
-					System.out.println(".......");
+					//½«sub_case_id¸üĞÂµ½HEventlogÖĞ
+					System.out.println("½øĞĞ×ÓÈÕÖ¾¸üĞÂ.......");
 					restructure re= new restructure();
+					//¶ÁÈ¡ÖØ¹¹µÄ×ÓÈÕÖ¾¹ì¼£
 					
 					XLog xLog = re.addSubCid(factory, sublog, path3);
 					
-					System.out.println("¸....");
+					System.out.println("¸üĞÂÍê³É....");
+					//²é¿´ÊÇ·ñµÃµ½¸üĞÂºóµÄÊÂ¼şÈÕÖ¾
+					
+					//¸üĞÂµ½subLogÖĞ
 					
 					value.setMainLog(xLog);
 					String name1 = key.toString()+ "_2";
 					class1 = new XEventClass(name1, key.getIndex());
 					System.out.println("key label:" + key.getId()+ "index: "+key.getIndex());
 		    	}
-		    	else {  
+		    	else {  //Ò»´Îµ¥ÊµÀı
 		    		value.setMainLog(sublog);
 		    		String name1 = key.toString();
 					 class1 = new XEventClass(name1, key.getIndex());
 		    	}
 		    	
+		    
+				//¼ì²é×Ó×ÓÈÕÖ¾
 				HashMap<XEventClass, HEventLog> sub_sub= new HashMap<XEventClass, HEventLog>();
 		    	if(value.getSubLogMapping()!=null){
 		    		sub_sub = getsubsequenceRecusively(factory, value.getSubLogMapping());
@@ -161,6 +173,7 @@ public class HEventLogConstruction {
 		    return newsubLogMapping;
 	}
 	
+	//ÅĞ¶ÏÊÇµ¥ÊµÀı»¹ÊÇ¶àÊµÀı, ¼ÓÈëÁËÇ¶Ì××ÓÁ÷³ÌµÄÅĞ¶Ï--------------------ÔÙ
 	public static int boolMultiInstance(XLog sublog) {
 		
 		HashSet<String> activitySet =ActivityRelationDetection.getActivitySet(sublog);
@@ -188,7 +201,7 @@ public class HEventLogConstruction {
 				}
 			}// for
 			
-			if(frequence == eventInTraceNum) {  
+			if(frequence == eventInTraceNum) {   //ËµÃ÷ÊÇÒ»´Î
 				dan++;
 			}
 			else if(frequence > eventInTraceNum) {
@@ -208,14 +221,17 @@ public class HEventLogConstruction {
 		
 	}
 	
-	//Python
+	//µ÷ÓÃPython
 	public static void addPython(String path,String path1,String path2) {
 
         try {
-       	String[] args1 = new String[] {"python", path,path1,path2};//
+        	//´«²Î
+        	String[] args1 = new String[] {"python", path,path1,path2};//
         	
+        	// Ö´ĞĞpyÎÄ¼ş
             Process proc = Runtime.getRuntime().exec(args1);
          
+            //ÓÃÊäÈëÊä³öÁ÷À´½ØÈ¡½á¹û
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line;
             //System.out.println(in.readLine());
@@ -249,6 +265,7 @@ public class HEventLogConstruction {
 		hEventLog.setMainLog(mainLog);
 		
 		//the mapping from nested eventclass (activities) to its corresponding sub-log. 
+		//×ÓÈÕÖ¾Ó³Éä
 		HashMap<XEventClass, HEventLog> subLogMapping =new HashMap<XEventClass, HEventLog>();
 		
 		for(String node: nestedActivitySet)
@@ -280,12 +297,14 @@ public class HEventLogConstruction {
 		return hashs;
 	}
 	//construct the main log, we only keep the complete event 
+	//¹¹Ôì¶¥²ãÊÂ¼şÈÕÖ¾£¬²¢Ö»°üÀ¨ ½áÊø ×´Ì¬
 	public static XLog getMainLog(XFactory factory, String logName, HashSet<XEventClass> XeventClassSetofTopLevelActivities, XLog lifecycleLog, XLogInfo Xloginfo)
 	{
 		XLog mainLog =initializeEventLog(factory, "Top-level");//set the log name
 		XAttributeMap attMap = new XAttributeMapImpl();
 		for(XTrace trace: lifecycleLog)
 		{
+			//´´ÔìÒ»Ìõ¹ì¼£
 			XTrace newTrace = factory.createTrace();
 			for(XEvent event: trace)
 			{

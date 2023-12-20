@@ -58,10 +58,10 @@ public class realEventLog2LifecycleEventLog {
 			XTrace newTrace1 = new XTraceImpl(XLogFunctions.copyAttMap(trace.getAttributes()));
 			int[] intstart = new int[trace.size()];
 			for(int k = 0; k<trace.size();k++) {
-				intstart[k]=0;   //start
+				intstart[k]=0;   //start标识
 			}
 			
-			//event
+			//从后向前遍历每一个event
 			for(int i=trace.size()-1;i>=0;i--)
 			{
 				if(XLifecycleExtension.instance().extractTransition(trace.get(i)).equals("complete")) {
@@ -77,7 +77,7 @@ public class realEventLog2LifecycleEventLog {
 							break;
 						}
 					}
-					if(flag==0) {//start
+					if(flag==0) {//说明没有找到start
 						
 						//XConceptExtension.instance().extractName(trace)
 						

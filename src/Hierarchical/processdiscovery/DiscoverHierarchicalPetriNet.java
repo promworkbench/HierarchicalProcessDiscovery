@@ -22,23 +22,26 @@ import software.processmining.componentbehaviordiscovery.HierarchicalMultiinstan
 public class DiscoverHierarchicalPetriNet {
 
 	// the input is a hierarchical event log
+	//输入是一个分层事件日志
 	public static HierarchicalMultiinstancePetriNet mineHierarchicalPetriNet(PluginContext context, HEventLog hseLog, MiningParameters parameters) throws ConnectionCannotBeObtained
 	{
 		HierarchicalMultiinstancePetriNet hpn = new HierarchicalMultiinstancePetriNet();
 		
 		// use the inductive miner for discovering. 
+		//顶层事件日志挖掘
 		Object[] objs =IMPetriNet.minePetriNet(hseLog.getMainLog(), parameters, new Canceller() {
 			public boolean isCancelled() {
 				return false;
 			}
 		});
 		
+		//确保源库所没有输入弧 结束库所没有输出弧
 		hpn.setPn(addingArtifitialSouceandTargetPlaces((Petrinet)objs[0], (Marking)objs[1], (Marking)objs[2]));
 
 		
 		//to deal with its sub-mapping from eventclass to hierarchical petri net
 		HashMap<XEventClass, HierarchicalMultiinstancePetriNet> XEventClass2hpn =new HashMap<XEventClass, HierarchicalMultiinstancePetriNet>();
-		//hseLog.getSubLogMapping().keySet().size()>0
+		//hseLog.getSubLogMapping().keySet().size()>0 说明存在调用子流程
 		if (hseLog.getSubLogMapping().keySet().size()>0)
 		{
 			for(XEventClass key:hseLog.getSubLogMapping().keySet())
@@ -55,6 +58,7 @@ public class DiscoverHierarchicalPetriNet {
 	}
 	
 	//make sure the source place do not have input arcs, e.g., single entry,and the target place do not have outgoing arcs. 
+	//确保源库所没有输入弧 结束库所没有输出弧
 	public static Petrinet addingArtifitialSouceandTargetPlaces(final Petrinet pn, Marking initialM, Marking finalM)
 	{
 		//get all places in the initial marking. 
